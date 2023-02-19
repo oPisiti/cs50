@@ -54,3 +54,4 @@ dkms.conf
 # Mine specific
 check50*
 info.txt
+.pytest_cache
