@@ -1,5 +1,4 @@
-#include "cs50.c"
-// #include <cs50.h>
+#include <cs50.h>
 #include <stdio.h>
 
 int main(void) 
@@ -15,7 +14,9 @@ int main(void)
 
         for(int s = 0; s < spaces; s++) printf(" ");
         for(int h = 0; h < i; h++)      printf("#");
+        printf("  ");
+        for(int h = 0; h < i; h++)      printf("#");
         
-        if(i != height)                 printf("\n");
+        printf("\n");
     }
 }
