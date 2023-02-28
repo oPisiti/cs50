@@ -56,3 +56,4 @@ check50*
 info.txt
 .pytest_cache
 .vscode
+*_*.bmp
