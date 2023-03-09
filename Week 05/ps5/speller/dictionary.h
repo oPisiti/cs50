@@ -11,9 +11,11 @@
 
 // Prototypes
 bool check(const char *word);
-unsigned int hash(const char *word);
 bool load(const char *dictionary);
 unsigned int size(void);
 bool unload(void);
+unsigned int hash(const char *word, bool bIsDictionaryWord);
+int create_table();
+void add_word(const char* word);
 
 #endif // DICTIONARY_H
