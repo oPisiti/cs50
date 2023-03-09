@@ -167,9 +167,21 @@ unsigned int size(void)
 // Unloads dictionary from memory, returning true if successful, else false
 bool unload(void)
 {
-    // TODO
+    // Closing file
     int closed = fclose(fDictPtr);
     
+    // Freeing the hash table's nodes
+    node* pCurrNode;
+    node* pPrevNode;
+    for(int i = 0; i < N; i++){
+        pCurrNode = table[i];
+        while(pCurrNode != NULL){
+            pPrevNode = pCurrNode;
+            pCurrNode = pCurrNode->next;
+            free(pPrevNode);
+        }
+    }
+
     if(closed == 0) return true;
     return false;
 }
