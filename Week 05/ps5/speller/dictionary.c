@@ -10,10 +10,6 @@
 
 #include "dictionary.h"
 
-// Functions declarations
-int create_table();
-void add_word(const char* word);
-
 // Represents a node in a hash table
 typedef struct node
 {
@@ -34,7 +30,7 @@ long lDictSize;
 const float fLoadFactor = 0.75f;
 node** table;
 bool bTableInit = false;
-uint8_t iNumCharsToHash = 3;
+uint8_t iNumCharsToHash = 4;
 
 // Returns true if word is in dictionary, else false
 bool check(const char *word){
@@ -46,7 +42,7 @@ bool check(const char *word){
     }
 
     // Searching the hash table for word
-    int iTableIndex = hash(word);
+    int iTableIndex = hash(word, false);
     node* pCurrNode = table[iTableIndex];
     while(pCurrNode != NULL){
         if(strcasecmp(pCurrNode->word, word) == 0) return true;
@@ -121,7 +117,7 @@ int create_table(){
 // Adds a word to a has table in the form of a node
 void add_word(const char* word){
     // Getting index
-    int iIndex = hash(word);
+    int iIndex = hash(word, true);
 
     // Creating a new node to hold the word
     node* pNewNode = malloc(sizeof(node));    
@@ -138,12 +134,16 @@ void add_word(const char* word){
 }
 
 // Hashes word to a number
-unsigned int hash(const char *word){
+unsigned int hash(const char *word, bool bIsDictionaryWord){
     uint8_t res = 0;
     for(int i = 0; i < iNumCharsToHash; i++){
         if(word[i] == '\0') break;
-        res += tolower(word[i]);
+
+        // All letters in words in dictionary are lower case
+        if(bIsDictionaryWord) res += word[i]; 
+        else                  res += tolower(word[i]);
     }
+    
     while(res >= N) res -= N;
 
     return res;
