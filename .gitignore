@@ -57,3 +57,4 @@ info.txt
 .pytest_cache
 .vscode
 *_*.bmp
+*.png
