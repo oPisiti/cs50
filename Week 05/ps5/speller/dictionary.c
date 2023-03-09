@@ -23,16 +23,18 @@ node;
 // TODO: Choose number of buckets in hash table
 const unsigned int N = 26;
 
-// Pointer to loaded dictionary
-FILE *fDictPtr = NULL;
+// Loaded dictionary
+char* sDictionaryWords;
+bool bDictLoaded = false;
+long lDictSize;
 
 // Hash table
 node *table[N];
 bool bTableInit = false;
 
 // Returns true if word is in dictionary, else false
-bool check(const char *word)
-{
+bool check(const char *word){
+
     // Making sure the has table has been initialized
     if(!bTableInit){
         create_table();
@@ -51,18 +53,20 @@ bool check(const char *word)
 }
 
 int create_table(){
-    if(fDictPtr == NULL) return 1;
+    if(!bDictLoaded) return 1;
 
     // Making sure every item in the table array points to NULL
     for(int i = 0; i < N; i++){
         table[i] = NULL;
     }
     
-    fseek(fDictPtr, 0, SEEK_SET);
+    long lDictIndex = 0;
     int index = 0;
     char word[LENGTH + 1];
     char c;
-    while (fread(&c, sizeof(char), 1, fDictPtr)){
+    while (sDictionaryWords[lDictIndex] != '\0'){
+        c = sDictionaryWords[lDictIndex];
+
         // Allow only alphabetical characters and apostrophes
         if (isalpha(c) || (c == '\'' && index > 0)){
             // Append character to word
@@ -73,7 +77,7 @@ int create_table(){
             if (index > LENGTH)
             {
                 // Consume remainder of alphabetical string
-                while (fread(&c, sizeof(char), 1, fDictPtr) && isalpha(c));
+                while(isalpha(sDictionaryWords[lDictIndex])) lDictIndex++;
 
                 // Prepare for new word
                 index = 0;
@@ -83,7 +87,7 @@ int create_table(){
         // Ignore words with numbers (like MS Word can)
         else if (isdigit(c)){
             // Consume remainder of alphanumeric string
-            while (fread(&c, sizeof(char), 1, fDictPtr) && isalnum(c));
+            while(isalnum(sDictionaryWords[lDictIndex])) lDictIndex++;
 
             // Prepare for new word
             index = 0;
@@ -99,6 +103,8 @@ int create_table(){
             // Prepare for next word
             index = 0;
         }
+
+        lDictIndex++;
     }
 
     return 0;
@@ -124,51 +130,53 @@ void add_word(const char* word){
 }
 
 // Hashes word to a number
-unsigned int hash(const char *word)
-{
+unsigned int hash(const char *word){
+
     if(word[0] <= 90)   return word[0] - 65;
     else                return word[0] - 97;
 }
 
 // Loads dictionary into memory, returning true if successful, else false
-bool load(const char *dictionary)
-{
-    // TODO
-    fDictPtr = fopen(dictionary, "r");
-    if(fDictPtr == NULL) return false;
+bool load(const char *dictionary){
+
+    FILE* fptr = fopen(dictionary, "r");
+    fseek(fptr, 0, SEEK_END);
+    lDictSize = ftell(fptr);
+    rewind(fptr);
+
+    sDictionaryWords = malloc(lDictSize + 1);
+    if(sDictionaryWords == NULL) return false;
+    bDictLoaded = true;
+
+    fread(sDictionaryWords, lDictSize, 1, fptr);
+    sDictionaryWords[lDictSize] = '\0';
  
+    fclose(fptr);
+
     return true;
 }
 
 // Returns number of words in dictionary if loaded, else 0 if not yet loaded
-unsigned int size(void)
-{
-    // TODO
-    if(fDictPtr == NULL) return 0;
+unsigned int size(void){
 
-    fseek(fDictPtr, 0, SEEK_SET);
-    int iTotalSize = 0, iWordSize = 0;
-    char cBuffer;
-    while(fread(&cBuffer, sizeof(char), 1, fDictPtr)){
-        if(isalpha(cBuffer) || cBuffer == '\''){
-            iWordSize++;
-            continue;
-        }
+    if(!bDictLoaded) return 0;
 
-        if(iWordSize){
-            iTotalSize++;
-            iWordSize = 0;
-        }
+    long lFileCharIndex = 0;
+    int iTotalSize = 0;
+    while(sDictionaryWords[lFileCharIndex] != '\0'){
+        if(sDictionaryWords[lFileCharIndex]== '\n') iTotalSize++;
+
+        lFileCharIndex++;
     }
 
     return iTotalSize;
 }
 
 // Unloads dictionary from memory, returning true if successful, else false
-bool unload(void)
-{
+bool unload(void){
+
     // Closing file
-    int closed = fclose(fDictPtr);
+    free(sDictionaryWords);
     
     // Freeing the hash table's nodes
     node* pCurrNode;
@@ -182,6 +190,5 @@ bool unload(void)
         }
     }
 
-    if(closed == 0) return true;
-    return false;
+    return true;
 }
