@@ -1,6 +1,8 @@
 // Implements a dictionary's functionality
 
 #include <ctype.h>
+#include <math.h>
+#include <stdint.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -20,8 +22,8 @@ typedef struct node
 }
 node;
 
-// TODO: Choose number of buckets in hash table
-const unsigned int N = 26;
+// Choose number of buckets in hash table
+unsigned int N;
 
 // Loaded dictionary
 char* sDictionaryWords;
@@ -29,8 +31,10 @@ bool bDictLoaded = false;
 long lDictSize;
 
 // Hash table
-node *table[N];
+const float fLoadFactor = 0.75f;
+node** table;
 bool bTableInit = false;
+uint8_t iNumCharsToHash = 3;
 
 // Returns true if word is in dictionary, else false
 bool check(const char *word){
@@ -54,6 +58,10 @@ bool check(const char *word){
 
 int create_table(){
     if(!bDictLoaded) return 1;
+
+    // Declaring table array (pointers to the first node of linked list)
+    N = round(pow(26, iNumCharsToHash));
+    table = malloc(N * sizeof(node*));
 
     // Making sure every item in the table array points to NULL
     for(int i = 0; i < N; i++){
@@ -113,7 +121,7 @@ int create_table(){
 // Adds a word to a has table in the form of a node
 void add_word(const char* word){
     // Getting index
-    int iIndex = hash(word)%N;
+    int iIndex = hash(word);
 
     // Creating a new node to hold the word
     node* pNewNode = malloc(sizeof(node));    
@@ -131,9 +139,14 @@ void add_word(const char* word){
 
 // Hashes word to a number
 unsigned int hash(const char *word){
+    uint8_t res = 0;
+    for(int i = 0; i < iNumCharsToHash; i++){
+        if(word[i] == '\0') break;
+        res += tolower(word[i]);
+    }
+    while(res >= N) res -= N;
 
-    if(word[0] <= 90)   return word[0] - 65;
-    else                return word[0] - 97;
+    return res;
 }
 
 // Loads dictionary into memory, returning true if successful, else false
@@ -178,7 +191,7 @@ bool unload(void){
     // Closing file
     free(sDictionaryWords);
     
-    // Freeing the hash table's nodes
+    // Freeing the hash table
     node* pCurrNode;
     node* pPrevNode;
     for(int i = 0; i < N; i++){
@@ -189,6 +202,7 @@ bool unload(void){
             free(pPrevNode);
         }
     }
+    free(table);
 
     return true;
 }
