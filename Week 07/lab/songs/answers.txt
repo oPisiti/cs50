@@ -1,0 +1,5 @@
+1. As the songs contained in the database are mostly rappers and pop artists, that characterizes this listener's Aura.
+2. Basing a person's prominent mood on items like energy, valence, and danceability is perhaps an incomplete way of characterizing their personality.
+A better way to characterize a person's aura might be by looking at the song's genres and how many times they were played in said year.
+Also, have some form of index relating to what was released or even most played at a certain week. This might rule out the contributions of new music, with influences what is heard.
+Therefore, it doesn't reflect, necessarily, what a person likes or dislikes.
