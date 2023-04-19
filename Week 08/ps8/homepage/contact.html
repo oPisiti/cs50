@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR">
+
+<head>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
+    <link href="styles-contact.css" rel="stylesheet">
+    <title>Contact</title>
+    <script>
+        let first_name, last_name, country, subject;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelector('#submit-input-button').addEventListener('click', () => {
+                first_name = document.querySelector('#first_name').value;
+                last_name  = document.querySelector('#last_name').value;
+                country    = document.querySelector('.country').value;
+                subject    = document.querySelector('#text-area').value;
+                confirm("Thank you, ".concat(first_name, ". We will be in contact soon!"))
+            });
+
+        });
+    </script>
+</head>
+
+<body lang="pt-BR">
+    <div class="header">
+        <h1>Contact</h1>
+        <div class="buttons-container">
+            <button class="buttons-item" id="projects-button"
+                onClick="location.href='./projects.html'">Projects</button>
+            <button class="buttons-item" id="github-button"
+                onclick="window.location.href='https://github.com/oPisiti';">Github</button>
+            <button class="buttons-item" id="contact-button" onClick="location.href='./index.html'">Home</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <label for="first_name">First Name</label>
+        <input type="text" id="first_name" placeholder="Your name...">
+        <label for="last_name">Last Name</label>
+        <input type="text" id="last_name" placeholder="Your last name...">
+
+        <label>Country</label>
+        <div class="container" id="country">
+            <select class="country" name="country">
+                <option value="brazil">Brazil</option>
+                <option value="usa">Usa</option>
+                <option value="canada">Canada</option>
+            </select>
+        </div>
+        <textarea id="text-area" name="subject" placeholder="Subject..."></textarea>
+        <div class="container" id="submit-input">
+            <input type="submit" value="Submit" id="submit-input-button">
+        </div>
+    </div>
+</body>
+
+</html>

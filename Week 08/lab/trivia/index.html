@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
+    <link href="styles.css" rel="stylesheet">
+    <title>Trivia!</title>
+    <script>
+        let q1CorrectAnswer      = "Renato Russo";
+        let q1CorrectAnswerColor = 'green';
+        let q1WrongAnswerColor   = 'red';
+
+        let q2CorrectAnswer      = "Vatican City";
+        let q2CorrectAnswerColor = "green";
+        let q2WrongAnswerColor   = 'red';
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelector('#A').addEventListener('click', () => {
+                let buttonA = document.querySelector('#A');
+                handleAnswer(buttonA,
+                             buttonA.textContent,
+                             q1CorrectAnswer,
+                             q1CorrectAnswerColor,
+                             q1WrongAnswerColor);
+            });
+            document.querySelector('#B').addEventListener('click', () => {
+                let buttonB = document.querySelector('#B');
+                handleAnswer(buttonB,
+                             buttonB.textContent,
+                             q1CorrectAnswer,
+                             q1CorrectAnswerColor,
+                             q1WrongAnswerColor);
+            });
+            document.querySelector('#C').addEventListener('click', () => {
+                let buttonC = document.querySelector('#C');
+                handleAnswer(buttonC,
+                             buttonC.textContent,
+                             q1CorrectAnswer,
+                             q1CorrectAnswerColor,
+                             q1WrongAnswerColor);
+            });
+            document.querySelector('#D').addEventListener('click', () => {
+                let buttonD = document.querySelector('#D');
+                handleAnswer(buttonD,
+                             buttonD.textContent,
+                             q1CorrectAnswer,
+                             q1CorrectAnswerColor,
+                             q1WrongAnswerColor);
+            });
+        });
+
+        function handleAnswer(answerDiv, answer, correctAnswer, correctAnswerColor, wrongAnswerColor, divType="button") {
+            let ele = document.createElement("div");
+            ele.className = "query-" + correctAnswer.replace(" ", "-");
+
+            // Creating a div for the text "Correct!" or "Incorrect"
+            if (answerDiv.parentNode.querySelector("." + ele.className) == null) {
+                answerDiv.parentNode.insertBefore(ele, answerDiv.parentNode.querySelector("h3").nextSibling);
+            }
+
+            // Getting such div
+            let correctIncorrectDiv = document.querySelector("." + ele.className);
+
+            // Making changes
+            if (answer == correctAnswer) {
+                if (divType != "button") answerDiv.children[0].style.backgroundColor = correctAnswerColor;
+                else                     answerDiv.style.background = correctAnswerColor;
+
+                correctIncorrectDiv.innerHTML = "Correct!";
+            }
+            else {
+                if (divType != "button") answerDiv.children[0].style.backgroundColor = wrongAnswerColor;
+                else                     answerDiv.style.background = wrongAnswerColor;
+                
+                correctIncorrectDiv.innerHTML = "Incorrect";
+            }
+        }
+
+        function handleFreeFormSubmit(){
+            handleAnswer(document.getElementById("free-form-answer").parentNode, 
+                         document.getElementById("free-form-answer").value, 
+                         q2CorrectAnswer, 
+                         q2CorrectAnswerColor, 
+                         q2WrongAnswerColor,
+                         "input");
+        }
+
+    </script>
+</head>
+
+<body>
+    <div class="header">
+        <h1>Trivia!</h1>
+    </div>
+
+    <div class="container">
+        <div class="section">
+            <h2>Part 1: Multiple Choice </h2>
+            <hr>
+            <h3>Who is the singer of pop brazilian music "Cachimbo da paz"?</h3>
+            <button id="A">Renato Russo</button>
+            <button id="B">Cassia Eller</button>
+            <button id="C">Gabriel, o pensador</button>
+            <button id="D">Ana Carolina</button>
+
+        </div>
+
+        <div class="section">
+            <h2>Part 2: Free Response</h2>
+            <hr>
+            <h3>Which is the smallest country by area in the world?</h3>
+            <form onsubmit="handleFreeFormSubmit(); return false;">
+                <input autocomplete="off" autofocus id="free-form-answer" placeholder="Answer" type="text">
+                <button type="submit">Enter</button>
+            </form>
+        </div>
+    </div>
+</body>
+
+</html>
