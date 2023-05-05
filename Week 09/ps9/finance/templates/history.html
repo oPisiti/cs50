@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Index
+{% endblock %}
+
+{% block main %}
+<table>
+    <tr>
+      <th>Type</th>
+      <th>Stock</th>
+      <th>Stock Price</th>
+      <th>Amount</th>
+      <th>Time</th>
+    </tr>
+    {% for entry in history %}
+    <tr>
+      <td>{{ entry["type"] }}</td>
+      <td>{{ entry["stock_symbol"] }}</td>
+      <td>{{ entry["price"] | abs | usd}}</td>
+      <td>{{ entry["amount"] }}</td>
+      <td>{{ entry["time_stamp"] }}</td>
+    </tr>
+    {% endfor %}
+</table> 
+{% endblock %}

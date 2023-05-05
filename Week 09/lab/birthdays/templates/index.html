@@ -1,0 +1,20 @@
+{% extends "template.html" %}
+
+{% block submit_name %}
+
+<form action="/" method="POST">
+    <input name="name">
+    <input type="date" name="date" min="1900-00-00" value="1970-01-01" />
+    <button type="submit">Register</button>
+</form>
+
+{% endblock %}
+
+{% block bday %}
+    {% for entry in birthday_data %}
+        <tr>
+            <td>{{ entry["name"] }}</td>
+            <td>{{ entry["day"] }}/{{entry["month"]}}</td>
+        </tr>
+    {% endfor %}
+{% endblock %}

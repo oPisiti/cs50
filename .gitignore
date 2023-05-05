@@ -58,3 +58,6 @@ info.txt
 .vscode
 *_*.bmp
 *.png
+venv
+*.pyc
+flask_session/
